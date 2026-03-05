@@ -1,0 +1,51 @@
+{
+    "project": "banaani-ugc-02",
+    "client": "banaani",
+    "ad_name": "Asiakastarina: Paremmat kuin 500€ lasit — Naiset 45-54",
+    "aspect_ratio": "9:16",
+    "video_duration": 25,
+    "voice_id": "dwKzSSwRu0m7qSpdvqwk",
+    "structure": {
+        "main": "talking_head",
+        "overlay": "greenscreen_talking_head_on_broll",
+        "note": "Customer testimonial format. Talking head speaks as if she is a real customer sharing her experience. B-roll shows product moments."
+    },
+    "talking_head": {
+        "full_script": "Mä maksoin vuosia optikkoliikkeeseen yli viissataa euroa moniteholaseista. Sit mun tytär näytti mulle Banaanin. Tilasin netistä kahdet lasit, yhteensä yheksänkymppiin euroa. Mä en uskonu. Sit ne tuli ja ne tuntu paremmilta ku ne mun vanhat viidensadan euron lasit. Lehtitestissä ne arvioitiin optisesti laadukkaammiksi ku seitsemänsadan euron lasit. Hinta-laatusuhde on loistava. Banaanilla on 100 päivän tyytyväisyystakuu, joten ei oo mitään riskiä kokeilla. Tilaa omasi banaanieyewear.fi.",
+        "avatar_id": null,
+        "note": "Testimonial tone: warm, genuine, slightly surprised by quality. This is a different avatar than ugc-01 — new person, new story."
+    },
+    "avatar_prompt": "Photorealistic portrait of a Finnish woman, age 52, short wavy grey-blonde hair, wearing a casual blue cotton blouse. Warm genuine smile, kind eyes. Soft natural daylight from a kitchen window in a cozy Finnish home. Shallow depth of field. Shot on professional camera, detailed skin texture, minimal natural makeup. Upper body framing, looking directly at camera. 9:16 vertical portrait orientation. High-end lifestyle photography style.",
+    "broll_clips": [
+        {
+            "clip_id": 1,
+            "timing": "during old expensive optician experience (500€+)",
+            "image_prompt": "Expensive luxury eyeglasses sitting in an upscale optician store display case, polished glass shelves, clinical bright store lighting, premium feel, shallow depth of field, casual phone camera style, no text, no writing, no price tags, no branding, 9:16 vertical",
+            "motion_prompt": "Subtle camera zoom towards the glasses in display, gentle ambient light reflection, minimal motion"
+        },
+        {
+            "clip_id": 2,
+            "timing": "during discovering Banaani online",
+            "image_prompt": "Woman's hands holding a smartphone showing an eyewear online store, coffee mug nearby on wooden kitchen table, warm cozy home lighting, casual iPhone screenshot style, no readable text on screen, no branding, 9:16 vertical",
+            "motion_prompt": "Gentle thumb scroll motion on phone screen, soft ambient light, natural subtle movement"
+        },
+        {
+            "clip_id": 3,
+            "timing": "during two pairs for 99€ reveal",
+            "image_prompt": "Two stylish pairs of eyeglasses laid on a soft white cloth next to their cases, natural daylight from window, overhead flat-lay angle, casual lifestyle photo, clean minimalist, no text, no branding, 9:16 vertical",
+            "motion_prompt": "Slow gentle camera pan across the two pairs, soft light playing on lenses, natural movement"
+        },
+        {
+            "clip_id": 4,
+            "timing": "during trying on and feeling quality",
+            "image_prompt": "Mature woman putting on stylish eyeglasses while looking at herself in a bathroom mirror, natural morning light, candid moment, warm genuine expression, phone camera style, not posed, no text, 9:16 vertical",
+            "motion_prompt": "Woman gently adjusting glasses on face, subtle head movement, natural bathroom light"
+        },
+        {
+            "clip_id": 5,
+            "timing": "during CTA / satisfaction guarantee",
+            "image_prompt": "Close-up of stylish eyeglasses being held up with both hands against soft window light, lenses catching light beautifully, warm intimate close-up, phone camera style, dreamy bokeh background, no text, no branding, 9:16 vertical",
+            "motion_prompt": "Slow gentle rotation of glasses in hands, light passing through lenses creating reflections, dreamy movement"
+        }
+    ]
+}

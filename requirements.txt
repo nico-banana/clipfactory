@@ -1,0 +1,6 @@
+google-genai
+fal-client
+pyyaml
+Pillow
+requests
+python-dotenv

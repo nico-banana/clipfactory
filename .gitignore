@@ -1,0 +1,22 @@
+# API keys — never commit
+.env
+
+# Generated output
+output/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
+
+# Client assets (product photos etc.)
+assets/
+
+# Retro folders (project-specific learnings)
+retro-*/
+
+# Skill files (project-specific)
+skill/

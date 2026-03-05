@@ -1,0 +1,49 @@
+{
+    "project": "banaani-ugc-01",
+    "client": "banaani",
+    "ad_name": "Monitehot: optikko vs. Banaani — Naiset 45-54",
+    "aspect_ratio": "9:16",
+    "voice_id": "dwKzSSwRu0m7qSpdvqwk",
+    "structure": {
+        "main": "talking_head",
+        "overlay": "greenscreen_talking_head_on_broll",
+        "note": "Talking head is the primary video. B-roll plays underneath with greenscreened talking head overlay during product/lifestyle moments."
+    },
+    "talking_head": {
+        "full_script": "Tiesitkö, että optikkoliikkeessä monitehot maksaa 600 viiva 800 euroa? Banaanilla saat kahdet silmälasit yhteensä 99 eurolla. Lehtitestissä ne arvioitiin optisesti laadukkaammiksi kuin 700 euron lasit. Tilasin ekan kerran netistä. 30 päivää palautusoikeutta, joten mitä menetettävää? Tuntuvat paremmilta kuin aikasemmat yli 500 euron lasit. Moniteholasit netistä? Banaanilla on 100 päivän tyytyväisyystakuu. Ei riskiä kokeilla.",
+        "avatar_id": null,
+        "note": "This is recorded as one continuous talking head video. B-roll clips are cut in during editing."
+    },
+    "broll_clips": [
+        {
+            "clip_id": 1,
+            "timing": "during price comparison (600-800€ vs 99€)",
+            "image_prompt": "Close-up of stylish acetate eyeglasses on a clean light surface, natural soft window light, shallow depth of field, casual iPhone-style photo, no text, no branding, photorealistic, 9:16 vertical",
+            "reference_image": "assets/banaani/products/corvus-transparent-gold_1.jpg"
+        },
+        {
+            "clip_id": 2,
+            "timing": "during product showcase",
+            "image_prompt": "Two pairs of eyeglasses laid casually on a bedside table next to a coffee mug, morning light, realistic lifestyle photo like taken on phone, warm tones, no text, 9:16 vertical",
+            "reference_image": "assets/banaani/products/corvus-black-silver_1.jpg"
+        },
+        {
+            "clip_id": 3,
+            "timing": "during ordering/delivery moment",
+            "image_prompt": "Hands carefully taking an eyeglasses case out of a plain cardboard shipping box on a kitchen table, realistic unboxing moment, natural indoor lighting, casual phone video style, no text no logos, 9:16 vertical",
+            "reference_image": null
+        },
+        {
+            "clip_id": 4,
+            "timing": "during wearing/lifestyle",
+            "image_prompt": "Woman wearing thin modern eyeglasses, looking at laptop screen while drinking coffee, natural home office setting, candid phone photo style, warm daylight from window, not posed, no text, 9:16 vertical",
+            "reference_image": "assets/banaani/products/corvus-gray-silver_1.jpg"
+        },
+        {
+            "clip_id": 5,
+            "timing": "during CTA / satisfaction guarantee",
+            "image_prompt": "Close-up of eyeglasses being held up toward a window with soft natural light passing through the lenses, hands visible, intimate detail shot, phone camera style, dreamy bokeh background, no text, 9:16 vertical",
+            "reference_image": "assets/banaani/products/corvus-demi-gold_1.jpg"
+        }
+    ]
+}

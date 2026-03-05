@@ -1,0 +1,36 @@
+# ClipFactory Configuration
+# API keys are loaded from .env file
+
+image_generation:
+  provider: "gemini"
+  model: "nano-banana-pro-preview"
+  resolution: "1080x1920"
+  style: "photorealistic"
+
+voiceover:
+  provider: "elevenlabs"
+  model_id: "eleven_multilingual_v2"
+  default_voice_id: "dwKzSSwRu0m7qSpdvqwk"  # RAN NAINEN PUHELIN (Finnish female)
+  variants: 3
+  stability: 0.5
+  similarity_boost: 0.75
+
+animation:
+  provider: "fal"
+  model: "fal-ai/kling-video/v2.5/standard/image-to-video"
+  duration: 5
+  aspect_ratio: "9:16"
+
+heygen:
+  provider: "heygen"
+  # avatar_id will be set after creating the avatar
+
+assembly:
+  output_format: "mp4"
+  codec: "libx264"
+  audio_codec: "aac"
+  fps: 30
+
+output:
+  base_dir: "output"
+  keep_intermediates: true

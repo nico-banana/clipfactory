@@ -4,7 +4,7 @@
 image_generation:
   provider: "gemini"
   model: "nano-banana-pro-preview"
-  resolution: "1080x1920"
+  resolution: "4K"
   style: "photorealistic"
 
 voiceover:
@@ -17,7 +17,7 @@ voiceover:
 
 animation:
   provider: "fal"
-  model: "fal-ai/kling-video/v2.5-turbo/pro/image-to-video"
+  model: "fal-ai/kling-video/v3/pro/image-to-video"
   duration: 5
   aspect_ratio: "9:16"
 

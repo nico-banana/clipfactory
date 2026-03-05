@@ -131,7 +131,7 @@ def run_pipeline(script_path: str, config_path: str = None,
             image_results = img_gen.generate_batch(scenes, output_dir)
         except ValueError as e:
             print(f"\n❌ Image generation setup failed: {e}")
-            print("   Set GEMINI_API_KEY environment variable and try again.")
+            print("   Set FAL_KEY environment variable and try again.")
             return
         except Exception as e:
             print(f"\n❌ Image generation failed: {e}")

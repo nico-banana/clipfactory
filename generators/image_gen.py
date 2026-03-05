@@ -1,94 +1,100 @@
 """
 ClipFactory — Image Generator Module
-Generates images from text prompts using Nano Banana 2 (Gemini API).
-Supports dual-frame generation for Kling O3 (start + end frame).
+Generates images via fal.ai Nano Banana Pro (Gemini 3 Pro Image).
 Supports reference images (product photos) for visual accuracy.
-Uses start frame as reference when generating end frame for consistency.
+Uses fal_client for unified billing through fal.ai.
 """
 
 import os
-import base64
-import json
 import time
 from pathlib import Path
 
 try:
-    from google import genai
-    from google.genai import types
-    HAS_GENAI = True
+    import fal_client
+    HAS_FAL = True
 except ImportError:
-    HAS_GENAI = False
-    print("⚠️  google-genai not installed. Run: pip install google-genai")
+    HAS_FAL = False
+    print("⚠️  fal-client not installed. Run: pip install fal-client")
 
 try:
-    from PIL import Image as PILImage
-    HAS_PIL = True
+    import requests as req_lib
+    HAS_REQUESTS = True
 except ImportError:
-    HAS_PIL = False
-    print("⚠️  Pillow not installed. Run: pip install Pillow")
+    HAS_REQUESTS = False
 
 
 class ImageGenerator:
-    """Generate images via Gemini API (Nano Banana 2) with reference image support."""
+    """Generate images via fal.ai Nano Banana Pro with reference image support."""
 
     def __init__(self, config: dict, project_root: str = None):
         self.config = config.get("image_generation", {})
-        self.model = self.config.get("model", "gemini-2.0-flash-exp")
-        self.resolution = self.config.get("resolution", "1024x1024")
+        self.model = self.config.get("model", "nano-banana-pro-preview")
+        self.resolution = self.config.get("resolution", "4K")
+        self.aspect_ratio = self.config.get("aspect_ratio", "9:16")
         self.project_root = project_root or os.path.dirname(os.path.dirname(__file__))
 
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY environment variable not set")
+        # Map model name to fal.ai endpoint
+        model_map = {
+            "nano-banana-pro-preview": "fal-ai/nano-banana-pro-preview",
+            "nano-banana-pro": "fal-ai/nano-banana-pro",
+            "recraft-v3": "fal-ai/recraft/v3/text-to-image",
+            "flux-pro-ultra": "fal-ai/flux-pro/v1.1-ultra",
+        }
+        self.fal_model = model_map.get(self.model, self.model)
 
-        if HAS_GENAI:
-            self.client = genai.Client(api_key=api_key)
+        # Normalize resolution
+        res_map = {"1080x1920": "1K", "1920x1080": "1K", "1024x1024": "1K",
+                   "2160x3840": "2K", "3840x2160": "2K",
+                   "1K": "1K", "2K": "2K", "4K": "4K"}
+        self.image_size = res_map.get(self.resolution,
+                                      self.resolution.upper() if self.resolution.upper() in ["1K", "2K", "4K"] else "1K")
+
+        if not HAS_FAL:
+            raise RuntimeError("fal-client not installed")
+
+        if not os.environ.get("FAL_KEY"):
+            raise ValueError("FAL_KEY environment variable not set")
+
+    def _upload_reference(self, path: str) -> str:
+        """Upload a local image file to fal.ai CDN and return the URL."""
+        if not os.path.isabs(path):
+            full_path = os.path.join(self.project_root, path)
         else:
-            self.client = None
+            full_path = path
 
-    def _load_reference_images(self, reference_str: str) -> list:
+        if not os.path.exists(full_path):
+            print(f"     ⚠️  Reference not found: {full_path}")
+            return None
+
+        try:
+            url = fal_client.upload_file(full_path)
+            print(f"     📎 Reference: {os.path.basename(full_path)}")
+            return url
+        except Exception as e:
+            print(f"     ⚠️  Upload failed for {os.path.basename(full_path)}: {e}")
+            return None
+
+    def _load_reference_urls(self, reference_str: str) -> list:
         """
-        Load reference image(s) from a reference_image path string.
+        Upload reference image(s) from a reference_image path string.
         Supports multiple images separated by ' + '.
-        Returns list of PIL Image objects.
+        Returns list of fal.ai CDN URLs.
         """
-        if not reference_str or not HAS_PIL:
+        if not reference_str:
             return []
 
-        images = []
+        urls = []
         paths = [p.strip() for p in reference_str.split("+")]
 
         for path in paths:
-            # Resolve relative to project root
-            if not os.path.isabs(path):
-                full_path = os.path.join(self.project_root, path)
-            else:
-                full_path = path
+            url = self._upload_reference(path)
+            if url:
+                urls.append(url)
 
-            if os.path.exists(full_path):
-                try:
-                    img = PILImage.open(full_path)
-                    images.append(img)
-                    print(f"     📎 Reference: {os.path.basename(full_path)}")
-                except Exception as e:
-                    print(f"     ⚠️  Could not load reference: {full_path}: {e}")
-            else:
-                print(f"     ⚠️  Reference not found: {full_path}")
-
-        return images
-
-    def _load_image_as_pil(self, image_path: str):
-        """Load a generated image as PIL Image for use as reference."""
-        if not HAS_PIL or not image_path:
-            return None
-        try:
-            return PILImage.open(image_path)
-        except Exception as e:
-            print(f"     ⚠️  Could not load image as reference: {e}")
-            return None
+        return urls
 
     def generate(self, prompt: str, output_path: str, scene_id: int = 0,
-                 suffix: str = "", reference_images: list = None) -> str:
+                 suffix: str = "", reference_urls: list = None) -> str:
         """
         Generate a single image from a text prompt, optionally with reference images.
 
@@ -96,63 +102,59 @@ class ImageGenerator:
             prompt: Text prompt for image generation
             output_path: Directory to save the image
             scene_id: Scene number for naming
-            suffix: Optional suffix for filename (e.g., '_start', '_end')
-            reference_images: Optional list of PIL Image objects to use as references
+            suffix: Optional suffix for filename
+            reference_urls: Optional list of fal.ai CDN URLs for reference images
         """
-        if not self.client:
-            raise RuntimeError("google-genai library not available")
-
         label = f"scene {scene_id}"
         if suffix:
             label += f" ({suffix.strip('_')} frame)"
 
-        ref_count = len(reference_images) if reference_images else 0
+        ref_count = len(reference_urls) if reference_urls else 0
         ref_label = f" + {ref_count} reference(s)" if ref_count else ""
         print(f"  🎨 Generating image for {label}{ref_label}...")
         print(f"     Prompt: {prompt[:80]}...")
 
         try:
-            # Build content parts: reference images first, then text prompt
-            content_parts = []
+            arguments = {
+                "prompt": prompt,
+                "aspect_ratio": self.aspect_ratio,
+                "resolution": self.image_size,
+                "num_images": 1,
+            }
 
-            if reference_images:
-                for ref_img in reference_images:
-                    content_parts.append(ref_img)
+            # Add reference images if provided
+            if reference_urls:
+                arguments["image_urls"] = reference_urls
 
-            content_parts.append(prompt)
-
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=content_parts,
-                config=types.GenerateContentConfig(
-                    response_modalities=["IMAGE", "TEXT"],
-                    temperature=1.0,
-                ),
+            result = fal_client.subscribe(
+                self.fal_model,
+                arguments=arguments,
             )
 
-            # Extract image from response
-            image_saved = False
-            for part in response.candidates[0].content.parts:
-                if part.inline_data and part.inline_data.mime_type.startswith("image/"):
-                    ext = part.inline_data.mime_type.split("/")[-1]
-                    if ext == "jpeg":
-                        ext = "jpg"
+            # Extract image URL from result
+            image_url = None
+            if isinstance(result, dict):
+                images = result.get("images", [])
+                if images and isinstance(images[0], dict):
+                    image_url = images[0].get("url")
+                elif result.get("image", {}).get("url"):
+                    image_url = result["image"]["url"]
 
-                    file_path = f"{output_path}/scene_{scene_id:02d}{suffix}.{ext}"
-                    Path(output_path).mkdir(parents=True, exist_ok=True)
+            if not image_url:
+                raise RuntimeError(f"No image URL in response: {result}")
 
-                    with open(file_path, "wb") as f:
-                        f.write(part.inline_data.data)
+            # Download and save image
+            Path(output_path).mkdir(parents=True, exist_ok=True)
+            file_path = f"{output_path}/scene_{scene_id:02d}{suffix}.jpg"
 
-                    print(f"  ✅ Image saved: {file_path}")
-                    image_saved = True
-                    return file_path
+            response = req_lib.get(image_url, stream=True)
+            response.raise_for_status()
+            with open(file_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
 
-            if not image_saved:
-                for part in response.candidates[0].content.parts:
-                    if part.text:
-                        print(f"  ⚠️  Model returned text instead of image: {part.text[:200]}")
-                raise RuntimeError("No image generated — model did not return image data")
+            print(f"  ✅ Image saved: {file_path}")
+            return file_path
 
         except Exception as e:
             print(f"  ❌ Image generation failed for {label}: {e}")
@@ -162,43 +164,35 @@ class ImageGenerator:
                       output_dir: str, scene_id: int = 0,
                       reference_image_str: str = None) -> tuple:
         """
-        Generate a start + end frame pair for Kling O3 dual-frame animation.
-
-        Strategy:
-        1. Start frame: Generated with product reference photos as context
-        2. End frame: Generated with product photos + start frame as context
-           → This ensures the same person/scene/products in both frames
-
+        Generate a start + end frame pair for dual-frame animation.
         Returns (start_image_path, end_image_path).
         """
         output_path = f"{output_dir}/images"
 
         print(f"\n  🖼️  Generating frame pair for scene {scene_id}...")
 
-        # Load product reference images
-        ref_images = self._load_reference_images(reference_image_str)
+        # Upload product reference images
+        ref_urls = self._load_reference_urls(reference_image_str)
 
-        # === PASS 1: Generate start frame with product references ===
+        # === PASS 1: Generate start frame ===
         start_path = self.generate(
             prompt=start_prompt,
             output_path=output_path,
             scene_id=scene_id,
             suffix="_start",
-            reference_images=ref_images if ref_images else None,
+            reference_urls=ref_urls if ref_urls else None,
         )
 
-        # Rate limiting
         time.sleep(2)
 
-        # === PASS 2: Generate end frame with product refs + start frame ===
-        # Use the start frame as additional reference for visual consistency
-        end_refs = list(ref_images) if ref_images else []
-        start_frame_pil = self._load_image_as_pil(start_path)
-        if start_frame_pil:
-            end_refs.append(start_frame_pil)
+        # === PASS 2: Generate end frame with start frame as reference ===
+        end_refs = list(ref_urls) if ref_urls else []
+        # Upload start frame as reference for consistency
+        start_url = self._upload_reference(start_path)
+        if start_url:
+            end_refs.append(start_url)
             print(f"     🔗 Using start frame as reference for end frame consistency")
 
-        # Enhance end prompt with consistency instruction
         consistency_prefix = (
             "Using the provided reference image(s) as visual context — "
             "maintain the EXACT same person, scene, products, lighting, and style. "
@@ -211,7 +205,7 @@ class ImageGenerator:
             output_path=output_path,
             scene_id=scene_id,
             suffix="_end",
-            reference_images=end_refs if end_refs else None,
+            reference_urls=end_refs if end_refs else None,
         )
 
         return start_path, end_path
@@ -220,8 +214,7 @@ class ImageGenerator:
                        scene_key: str = "scenes") -> list:
         """
         Generate images for all scenes in a script.
-        Supports both single-frame (legacy) and dual-frame (O3) formats.
-        Automatically uses reference images when specified in scene data.
+        Supports both single-frame and dual-frame formats.
 
         Returns list of (scene_id, start_path, end_path) tuples.
         end_path is None for single-frame scenes.
@@ -235,9 +228,9 @@ class ImageGenerator:
         mode = "dual-frame (O3)" if has_dual else "single-frame (legacy)"
         ref_mode = " + product references" if has_refs else ""
         print(f"\n🖼️  Generating {total} {'frame pairs' if has_dual else 'images'}...")
-        print(f"   Model: {self.model}")
+        print(f"   Model: {self.fal_model}")
         print(f"   Mode:  {mode}{ref_mode}")
-        print(f"   Resolution: {self.resolution}\n")
+        print(f"   Resolution: {self.image_size}\n")
 
         for i, scene in enumerate(scenes):
             scene_id = scene.get("scene_id") or scene.get("clip_id", i + 1)
@@ -253,7 +246,7 @@ class ImageGenerator:
 
             try:
                 if end_prompt:
-                    # Dual-frame mode (O3) — with reference images and consistency
+                    # Dual-frame mode
                     start_path, end_path = self.generate_pair(
                         start_prompt=start_prompt,
                         end_prompt=end_prompt,
@@ -263,17 +256,17 @@ class ImageGenerator:
                     )
                     results.append((scene_id, start_path, end_path))
                 else:
-                    # Single-frame mode (legacy / backward compatible)
-                    ref_images = self._load_reference_images(reference_image_str)
+                    # Single-frame mode
+                    ref_urls = self._load_reference_urls(reference_image_str)
                     image_path = self.generate(
                         prompt=start_prompt,
                         output_path=f"{output_dir}/images",
                         scene_id=scene_id,
-                        reference_images=ref_images if ref_images else None,
+                        reference_urls=ref_urls if ref_urls else None,
                     )
                     results.append((scene_id, image_path, None))
 
-                # Rate limiting between scenes
+                # Rate limiting
                 if i < total - 1:
                     time.sleep(2)
 

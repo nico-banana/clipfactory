@@ -208,16 +208,18 @@ class AnimationEngine:
             for sid, start, end in normalized
             if start is not None
         }
-        results = []
         total = len(image_lookup)
 
         dual_count = sum(1 for _, (_, end) in image_lookup.items() if end)
         mode = f"{dual_count} dual-frame, {total - dual_count} single-frame"
 
-        print(f"\n🎬 Animating {total} scenes...")
+        print(f"\n🎬 Animating {total} scenes in parallel...")
         print(f"   Model: {self.model}")
         print(f"   Mode:  {mode}")
         print(f"   Duration: {self.duration}s per clip\n")
+
+        # ─── Submit all jobs concurrently ───
+        jobs = {}  # scene_id -> (handle, metadata)
 
         for scene in scenes:
             scene_id = scene.get("scene_id") or scene.get("clip_id")
@@ -230,26 +232,94 @@ class AnimationEngine:
             start_path, end_path = paths
             animation_prompt = scene.get("motion_prompt") or scene.get("animation_prompt", "Gentle cinematic movement")
             duration = scene.get("duration", self.duration)
+            has_end_frame = end_path is not None and self.supports_dual_frame
 
             try:
-                clip_path = self.animate(
-                    image_path=start_path,
-                    animation_prompt=animation_prompt,
-                    output_dir=output_dir,
-                    scene_id=scene_id,
-                    duration=duration,
-                    end_image_path=end_path,
-                )
-                results.append((scene_id, clip_path))
+                # Upload images
+                image_url = self._upload_image(start_path)
 
-                # Rate limiting between animations
-                time.sleep(1)
+                arguments = {
+                    "image_url": image_url,
+                    "prompt": animation_prompt,
+                    "duration": str(duration),
+                }
+
+                if has_end_frame:
+                    end_image_url = self._upload_image(end_path)
+                    arguments["end_image_url"] = end_image_url
+
+                if not self.supports_dual_frame:
+                    arguments["aspect_ratio"] = self.aspect_ratio
+
+                if self.supports_dual_frame and self.generate_audio:
+                    arguments["generate_audio"] = True
+
+                # Submit (non-blocking)
+                handle = fal_client.submit(self.model, arguments=arguments)
+                jobs[scene_id] = (handle, duration, has_end_frame)
+                print(f"  🚀 Scene {scene_id} submitted ({duration}s, {'dual' if has_end_frame else 'single'})")
 
             except Exception as e:
-                print(f"  ❌ Scene {scene_id} animation failed: {e}")
-                results.append((scene_id, None))
+                print(f"  ❌ Scene {scene_id} submit failed: {e}")
+
+        print(f"\n  ⏳ {len(jobs)} jobs submitted, waiting for results...\n")
+
+        # ─── Wait for all jobs (each handle.get() blocks until done) ───
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        def _wait_and_download(scene_id, handle, output_dir):
+            """Block on handle.get(), extract URL, download video."""
+            try:
+                result = handle.get()
+
+                # Extract video URL
+                video_url = None
+                if isinstance(result, dict):
+                    video_url = (
+                        result.get("video", {}).get("url")
+                        or result.get("video_url")
+                        or (result.get("output", {}).get("url") if isinstance(result.get("output"), dict) else None)
+                    )
+                    if not video_url and "video" in result:
+                        if isinstance(result["video"], str):
+                            video_url = result["video"]
+
+                if not video_url:
+                    print(f"  ❌ Scene {scene_id}: No video URL in response")
+                    return (scene_id, None)
+
+                # Download video
+                clip_dir = f"{output_dir}/clips"
+                Path(clip_dir).mkdir(parents=True, exist_ok=True)
+                file_path = f"{clip_dir}/scene_{scene_id:02d}.mp4"
+
+                response = requests.get(video_url, stream=True)
+                response.raise_for_status()
+                with open(file_path, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
+
+                print(f"  ✅ Scene {scene_id} done → {os.path.basename(file_path)}")
+                return (scene_id, file_path)
+
+            except Exception as e:
+                print(f"  ❌ Scene {scene_id} failed: {e}")
+                return (scene_id, None)
+
+        results = []
+        with ThreadPoolExecutor(max_workers=len(jobs)) as executor:
+            futures = {
+                executor.submit(_wait_and_download, sid, handle, output_dir): sid
+                for sid, (handle, dur, dual) in jobs.items()
+            }
+            for future in as_completed(futures):
+                results.append(future.result())
+
+        # Sort results by scene_id
+        results.sort(key=lambda x: x[0])
 
         successful = sum(1 for _, path in results if path is not None)
-        print(f"\n📊 Animation complete: {successful}/{total} successful")
+        print(f"\n📊 Animation complete: {successful}/{total} successful (parallel)")
 
         return results
+

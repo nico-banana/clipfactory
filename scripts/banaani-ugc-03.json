@@ -8,7 +8,7 @@
     "structure": {
         "main": "talking_head",
         "overlay": "greenscreen_talking_head_on_broll",
-        "note": "Single-image animation with UGC handheld feel. Product reference photos used for accurate product appearance. Kling 2.5 Turbo Pro for motion."
+        "note": "Single-image + motion prompt. Raw UGC phone-filmed look. Product references for accuracy. Kling 2.5 Turbo Pro."
     },
     "avatar_prompt": "Photorealistic portrait of a Finnish/Nordic woman, age 50, natural light blonde shoulder-length hair typical Scandinavian style, wearing a soft cream-white knit sweater. Warm genuine smile showing slight surprise, kind light blue Nordic eyes, fair skin with natural freckles. Soft natural daylight from a kitchen window in a cozy Finnish home. Shallow depth of field, creamy warm bokeh. Shot on professional camera, detailed skin texture, minimal natural makeup. Upper body framing, looking directly at camera. 9:16 vertical portrait orientation. High-end lifestyle photography.",
     "talking_head": {
@@ -56,54 +56,54 @@
             "clip_id": 1,
             "duration": 5,
             "timing": "0-3s — optikolla yli 500€",
-            "image_prompt": "A pair of premium eyeglasses on a glass shelf inside a bright optician store. Cold white fluorescent lighting. Glass display cases in background. The glasses sit on a clear perspex display stand. Sterile expensive retail atmosphere. Shot from slightly below eye level as if browsing the display. Phone camera style, slightly imperfect handheld angle. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Handheld camera slowly pans across the display shelf, slight natural camera shake as if someone is filming with their phone while walking past, fluorescent light reflections shift on the glass"
+            "image_prompt": "Eyeglasses sitting on a glass shelf in an optician shop, harsh overhead fluorescent lighting, reflections on glass cases, slightly messy display with price tags visible. Shot on phone camera, slightly off-center framing, not perfectly sharp. Everyday retail environment, nothing fancy. 9:16 vertical.",
+            "motion_prompt": "Shaky handheld camera pans across shelf, natural phone filming wobble, someone quickly scanning products in a store"
         },
         {
             "clip_id": 2,
             "duration": 5,
             "timing": "3-6s — löysin Banaanin",
-            "image_prompt": "An open small brown cardboard shipping box on a light wooden kitchen table, with a black glasses case visible inside. Warm morning sunlight from a window. Cozy Nordic Scandinavian home interior. A cup of coffee sits nearby. Overhead angle as if filming with phone held above the table. Casual unboxing moment. Phone camera style. No people visible. No text, no logos. 9:16 vertical.",
-            "motion_prompt": "Handheld overhead camera gently moves closer to the open package, natural slight wobble of someone filming an unboxing with their phone, warm cozy lighting"
+            "image_prompt": "Small brown cardboard delivery box just opened on a messy kitchen table, glasses case peeking out from tissue paper. Morning light from window, coffee mug nearby with coffee ring stain on table. Real lived-in kitchen, not styled. Phone camera quality, slightly overexposed from window light. 9:16 vertical.",
+            "motion_prompt": "Quick excited handheld movement zooming into the open box, fingers almost reaching in, natural phone shaking from excitement of unboxing"
         },
         {
             "clip_id": 3,
             "duration": 5,
             "timing": "6-9s — kahdet lasit 99€",
-            "image_prompt": "Two pairs of eyeglasses matching the reference photos laid side by side on a soft white linen cloth. Natural warm morning light from the right. Clean flat-lay composition. Top-down overhead angle as if someone placed their phone above to take a photo. Warm tones, casual styling. Phone camera style. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Slight handheld movement as someone films both pairs of glasses from above, gentle natural drift with subtle phone camera shake, warm morning light plays across the lenses",
+            "image_prompt": "Two pairs of eyeglasses matching the reference photos placed casually on a wrinkled bedsheet or kitchen counter, not perfectly arranged. Natural indoor light, one pair slightly overlapping the other. Real casual moment, someone just put them down to take a quick phone pic. Slightly warm phone camera tone. 9:16 vertical.",
+            "motion_prompt": "Hand adjusts one pair then pulls back to show both, casual handheld phone filming with natural micro-shakes and slight refocus",
             "reference_image": "assets/banaani/products/corvus-transparent-gold_1.jpg + assets/banaani/products/corvus-black-silver_1.jpg"
         },
         {
             "clip_id": 4,
             "duration": 5,
             "timing": "9-13s — tuntuvat paremmilta",
-            "image_prompt": "Close-up of the exact eyeglasses from the reference photo resting open on a warm wooden table. Soft natural daylight creating gentle shadows. The glasses frame details are clearly visible. Shallow depth of field with warm bokeh. Shot from a low angle as if someone put their phone down on the table to film. Casual intimate product shot. Phone camera style. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Slow handheld camera movement around the glasses, natural phone filming motion as if picking up and admiring the frame, gentle organic camera sway with warm light",
+            "image_prompt": "Close-up of the exact glasses from reference photo being held in someone's hand against a blurry living room background. Natural afternoon light, you can see fingerprints on the lens. Real authentic moment of someone examining their new glasses. Phone camera, shallow depth of field from phone portrait mode. 9:16 vertical.",
+            "motion_prompt": "Hand slowly rotates the glasses to show different angles, casual natural movement like showing a friend, slight phone camera wobble",
             "reference_image": "assets/banaani/products/corvus-brown-gunmetal_1.jpg"
         },
         {
             "clip_id": 5,
             "duration": 5,
             "timing": "13-16s — hinta-laatusuhde loistava",
-            "image_prompt": "Detailed close-up of the exact eyeglasses from the reference photo, focusing on the hinge area and frame craftsmanship. The glasses are held at an angle against a warm blurred background. Natural warm side light catching the metal details and frame finish. Macro-style detail shot as if filming close-up with phone camera. Phone camera style. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Very gentle handheld micro-movements as someone films the glasses detail with their phone close-up, subtle focus breathing, natural warm light catching metal reflections",
+            "image_prompt": "Extreme close-up of the glasses frame hinge and temple detail from reference photo, shot really close with phone camera so it's slightly soft focus. You can see the material quality and finish. Against a neutral blurry background. Phone macro shot, not a studio product photo. 9:16 vertical.",
+            "motion_prompt": "Slow subtle movement as someone holds phone very close to the frame detail, slight natural breathing movement, focus shifts slightly",
             "reference_image": "assets/banaani/products/corvus-demi-gold_1.jpg"
         },
         {
             "clip_id": 6,
             "duration": 5,
             "timing": "16-18s — kokeile itekin",
-            "image_prompt": "Lifestyle flat-lay: the exact eyeglasses from the reference photo on an open book, next to a steaming coffee cup on a cozy cream knit blanket. Small green plant nearby. Soft warm afternoon window light. Nordic hygge atmosphere. Overhead phone camera angle. Casual cozy lifestyle feel. Phone camera style. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Gentle lazy overhead drift as someone casually films the cozy scene with their phone, slight handheld wobble, warm inviting atmosphere",
+            "image_prompt": "Glasses from reference photo sitting on an open book next to a half-drunk coffee cup on a couch armrest. Cozy blanket visible, real lived-in Nordic home. Afternoon light through curtains. Not styled, just casually placed. Phone camera selfie perspective looking down. 9:16 vertical.",
+            "motion_prompt": "Lazy casual pan down to show the glasses in context, natural relaxed filming like posting to Instagram stories",
             "reference_image": "assets/banaani/products/corvus-gray-silver_1.jpg"
         },
         {
             "clip_id": 7,
             "duration": 5,
             "timing": "18-20s — CTA end card",
-            "image_prompt": "Three pairs of stylish eyeglasses from the reference photos arranged casually on a clean white marble surface with a small succulent plant and coffee cup. Bright morning window light. Aspirational but casual flat-lay composition. Overhead angle as if phone held above. Phone camera style. No people. No text, no branding. 9:16 vertical.",
-            "motion_prompt": "Slow handheld overhead reveal, camera gently pulling up and back as if someone lifts their phone to show the full collection, natural organic movement with slight tilt",
+            "image_prompt": "Three different pairs of glasses from reference photos spread out on a kitchen table next to laptop and coffee. Natural daylight, slightly cluttered real desk. Casual overhead shot as if someone held their phone above to snap a quick pic for social media. Not a styled flat-lay. 9:16 vertical.",
+            "motion_prompt": "Quick overhead phone pan across all three pairs, casual reveal movement like filming for TikTok or stories, natural authentic motion",
             "reference_image": "assets/banaani/products/corvus-transparent-gold_1.jpg + assets/banaani/products/corvus-demi-gold_1.jpg + assets/banaani/products/perseus-olive-silver_1.jpg"
         }
     ]

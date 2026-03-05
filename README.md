@@ -18,7 +18,15 @@ cp .env.example .env
 python clipfactory.py scripts/banaani-ugc-01.json
 ```
 
-## Usage
+## MCP Workflow (Recommended)
+
+The **fal.ai MCP server** enables running the pipeline directly from AI conversation — no terminal needed. This is the preferred method when working with an AI assistant.
+
+Available tools: `generate_image`, `generate_video_from_image`, `generate_video`, `remove_background`, `upscale_image`, `upload_file`, `list_models`, `get_pricing`.
+
+See `/clipfactory` workflow for full instructions.
+
+## Usage (Script Mode)
 
 ```bash
 # Full pipeline (images → animation → assembly)

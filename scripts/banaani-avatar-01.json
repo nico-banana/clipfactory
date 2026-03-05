@@ -1,0 +1,69 @@
+{
+    "project": "banaani-avatar-01",
+    "client": "banaani",
+    "ad_name": "Avatar UGC — Asiakastarina moniteholasit",
+    "aspect_ratio": "9:16",
+    "video_duration": 35,
+    "structure": {
+        "main": "avatar_showcase",
+        "note": "Avatar wearing and showcasing Banaani glasses in everyday Nordic lifestyle settings. Each scene uses the avatar reference + product reference for visual consistency. Kling V3 Pro animation."
+    },
+    "broll_clips": [
+        {
+            "clip_id": 1,
+            "duration": 5,
+            "timing": "0-5s — unboxing excitement",
+            "image_prompt": "The exact woman from the reference photo sitting at a light wooden kitchen table, opening a small brown Banaani shipping box. She is smiling warmly and looking down at the box with genuine excitement. A fresh cup of coffee on the table beside her. Warm Nordic morning sunlight from a nearby window. Same cream knit sweater, same blonde shoulder-length hair, same blue eyes. Natural, authentic, candid moment. High quality portrait photography. 9:16 vertical.",
+            "motion_prompt": "Gentle natural head movement and subtle smile as she opens the box, soft handheld camera drift closer to her face, warm authentic moment",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg"
+        },
+        {
+            "clip_id": 2,
+            "duration": 5,
+            "timing": "5-10s — trying on glasses first time",
+            "image_prompt": "The exact woman from the avatar reference photo putting on the exact eyeglasses from the product reference photo. She is lifting the glasses towards her face with both hands, looking slightly upward. Warm smile of anticipation. Same cream knit sweater. Bright natural window light in a cozy Nordic home interior. Medium close-up, chest and face visible. Authentic, natural moment. High quality lifestyle photography. 9:16 vertical.",
+            "motion_prompt": "Natural gentle movement of putting on glasses, subtle excited head tilt, warm authentic handheld camera feel",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-transparent-gold_1.jpg"
+        },
+        {
+            "clip_id": 3,
+            "duration": 5,
+            "timing": "10-15s — wearing glasses, reading",
+            "image_prompt": "The exact woman from the avatar reference photo wearing the exact eyeglasses from the product reference photo. She is sitting comfortably in a cozy armchair, reading a book. The glasses sit naturally on her face. Warm afternoon sunlight from a window, creating a cozy Nordic hygge atmosphere. She looks content and focused. Same cream sweater, same blonde hair. Medium shot showing face and upper body. High quality lifestyle photography. 9:16 vertical.",
+            "motion_prompt": "Very subtle natural breathing movement, gentle page turn, soft organic camera drift as if filmed by someone nearby",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-demi-gold_1.jpg"
+        },
+        {
+            "clip_id": 4,
+            "duration": 5,
+            "timing": "15-20s — looking at phone, glasses working",
+            "image_prompt": "The exact woman from the avatar reference photo wearing the exact eyeglasses from the product reference photo, looking at her smartphone while sitting at a kitchen table. She smiles slightly as she reads something on the screen. The multifocal glasses allow her to see the phone perfectly. Warm natural daylight. Same cream knit sweater, same blonde shoulder-length hair. Close-up of her face with glasses clearly visible. Authentic, natural lifestyle moment. 9:16 vertical.",
+            "motion_prompt": "Subtle natural movement as she looks at the phone, gentle smile, organic handheld camera feel with slight drift",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-brown-gunmetal_1.jpg"
+        },
+        {
+            "clip_id": 5,
+            "duration": 5,
+            "timing": "20-25s — confident mirror selfie moment",
+            "image_prompt": "The exact woman from the avatar reference photo wearing the exact eyeglasses from the product reference photo, looking directly at the camera with a confident warm smile. The glasses frame her face beautifully. Bright natural light from behind creating a soft glow around her hair. Same cream sweater, same blonde hair. Head and shoulders portrait. She looks genuinely happy and confident wearing the glasses. Beautiful natural catchlight in her blue eyes through the lenses. 9:16 vertical.",
+            "motion_prompt": "Subtle confident head tilt and warm smile, gentle natural camera movement, authentic selfie-style feel",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-gray-silver_1.jpg"
+        },
+        {
+            "clip_id": 6,
+            "duration": 5,
+            "timing": "25-30s — outdoor, walking in nature",
+            "image_prompt": "The exact woman from the avatar reference photo wearing the exact eyeglasses from the product reference photo, outdoors in a beautiful Finnish forest path during golden hour. She is walking towards the camera, looking happy and relaxed, the autumn light catching the glasses frame beautifully. She wears a warm coat over her cream sweater. Soft bokeh of birch trees and green nature in the background. Natural, candid, lifestyle photography. 9:16 vertical.",
+            "motion_prompt": "Gentle forward walking movement, natural happy expression, soft organic camera follows her with slight handheld sway",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-black-silver_1.jpg"
+        },
+        {
+            "clip_id": 7,
+            "duration": 5,
+            "timing": "30-35s — CTA: showing off both pairs",
+            "image_prompt": "The exact woman from the avatar reference photo sitting at a clean bright table, wearing one pair of glasses from the first product reference while holding the second pair in her hand, showing them to the camera. Warm confident smile. She is demonstrating that she has two pairs. Bright natural morning light. Same cream sweater, same blonde hair, same blue eyes. Clean lifestyle composition. High quality portrait photography. 9:16 vertical.",
+            "motion_prompt": "Natural hand gesture showing the second pair of glasses, warm smile and subtle nod, gentle camera drift closer",
+            "reference_image": "output/banaani_ugc_03/avatar/variant_2.jpg + assets/banaani/products/corvus-transparent-gold_1.jpg + assets/banaani/products/corvus-demi-gold_1.jpg"
+        }
+    ]
+}

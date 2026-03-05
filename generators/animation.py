@@ -137,9 +137,9 @@ class AnimationEngine:
             if isinstance(result, dict):
                 # Different models return video URL in different fields
                 video_url = (
-                    result.get("video", {}).get("url") or
-                    result.get("video_url") or
-                    result.get("output", {}).get("url") if isinstance(result.get("output"), dict) else None
+                    result.get("video", {}).get("url")
+                    or result.get("video_url")
+                    or (result.get("output", {}).get("url") if isinstance(result.get("output"), dict) else None)
                 )
                 # Try nested structures
                 if not video_url and "video" in result:

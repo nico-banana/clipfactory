@@ -139,16 +139,21 @@ def run_pipeline(script_path: str, config_path: str = None,
     else:
         # Load existing images from output directory
         images_dir = f"{output_dir}/images"
-        if not os.path.exists(images_dir):
-            # Try to find the most recent output for this project
+        if not os.path.exists(images_dir) or not os.listdir(images_dir if os.path.exists(images_dir) else "."):
+            # Try to find the most recent output for this project that HAS images
             client_dir = os.path.join(os.path.dirname(__file__), output_base, client)
             if os.path.exists(client_dir):
                 dirs = sorted([d for d in os.listdir(client_dir) if project_name in d])
-                if dirs:
-                    latest = dirs[-1]
-                    images_dir = os.path.join(client_dir, latest, "images")
-                    output_dir = os.path.join(client_dir, latest)
-                    print(f"  📂 Using existing images from: {images_dir}")
+                # Walk backwards to find most recent dir with actual images
+                for candidate in reversed(dirs):
+                    candidate_images = os.path.join(client_dir, candidate, "images")
+                    if os.path.exists(candidate_images) and any(
+                        f.startswith("scene_") for f in os.listdir(candidate_images)
+                    ):
+                        images_dir = candidate_images
+                        output_dir = os.path.join(client_dir, candidate)
+                        print(f"  📂 Using existing images from: {images_dir}")
+                        break
 
         if os.path.exists(images_dir):
             # Discover images — support both single and dual-frame naming

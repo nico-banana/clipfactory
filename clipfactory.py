@@ -126,7 +126,8 @@ def run_pipeline(script_path: str, config_path: str = None,
         from generators.image_gen import ImageGenerator
 
         try:
-            img_gen = ImageGenerator(config)
+            project_root = os.path.dirname(os.path.abspath(__file__))
+            img_gen = ImageGenerator(config, project_root=project_root)
             image_results = img_gen.generate_batch(scenes, output_dir)
         except ValueError as e:
             print(f"\n❌ Image generation setup failed: {e}")

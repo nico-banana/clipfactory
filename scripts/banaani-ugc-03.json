@@ -55,6 +55,7 @@
     "broll_clips": [
         {
             "clip_id": 1,
+            "duration": 5,
             "timing": "0-3s — optikolla yli 500€",
             "start_image_prompt": "Expensive premium eyeglasses sitting on a polished optician counter in a bright clinical optician store, glass display cases in background, sterile white lighting, luxurious but cold atmosphere, shallow depth of field, phone camera style, no text, no writing, no branding, 9:16 vertical",
             "end_image_prompt": "Close-up of the same expensive glasses on the optician counter, a small price tag showing a high number visible next to them, sterile clinical lighting, cold atmosphere emphasizing expense, phone camera style, no text, no writing, no branding, 9:16 vertical",
@@ -63,6 +64,7 @@
         },
         {
             "clip_id": 2,
+            "duration": 5,
             "timing": "3-6s — löysin Banaanin",
             "start_image_prompt": "Woman's hands reaching for a small plain cardboard shipping box sitting on a wooden kitchen table, warm sunlight from window, cozy Nordic home interior, the box is still closed, casual anticipation moment, phone camera style, no text, no writing, no logos, no branding, 9:16 vertical",
             "end_image_prompt": "Woman's hands holding open the same small cardboard shipping box revealing a glasses case inside, warm sunlight from window, cozy Nordic home interior, wooden table surface, joyful unboxing discovery moment, phone camera style, no text, no writing, no logos, no branding, 9:16 vertical",
@@ -71,6 +73,7 @@
         },
         {
             "clip_id": 3,
+            "duration": 5,
             "timing": "6-9s — kahdet lasit 99€",
             "start_image_prompt": "One pair of elegant transparent-gold eyeglasses laid on a soft white linen cloth, natural morning window light, clean minimalist composition, warm tones, phone camera style, no text, no writing, no branding, 9:16 vertical",
             "end_image_prompt": "Two pairs of elegant eyeglasses laid side by side on a soft white linen cloth, one transparent-gold frame and one black-silver frame, natural morning window light, clean minimalist flat-lay composition, warm tones, phone camera style, no text, no writing, no branding, 9:16 vertical",
@@ -79,6 +82,7 @@
         },
         {
             "clip_id": 4,
+            "duration": 5,
             "timing": "9-13s — tuntuvat paremmilta",
             "start_image_prompt": "A woman holding stylish brown-gunmetal modern eyeglasses up in front of her, about to put them on, natural daylight on her face, Nordic fair skin, casual anticipation moment, phone camera style, shallow depth of field, no text, no branding, 9:16 vertical",
             "end_image_prompt": "Close-up of the same woman now wearing the stylish brown-gunmetal modern eyeglasses, natural satisfied expression with a gentle smile, warm natural daylight on face, Nordic fair skin, confident candid moment, phone camera style, shallow depth of field, no text, no branding, 9:16 vertical",
@@ -87,6 +91,7 @@
         },
         {
             "clip_id": 5,
+            "duration": 5,
             "timing": "13-16s — hinta-laatusuhde loistava",
             "start_image_prompt": "Elegant wide shot of demi-gold eyeglasses resting on a clean surface, warm natural side light, beautiful bokeh background, product showcase shot, phone camera style, no text, no branding, 9:16 vertical",
             "end_image_prompt": "Extreme close-up of the same demi-gold eyeglasses being held in one hand with light catching the frame details and hinge craftsmanship, warm natural light from side, intimate quality detail shot showing premium finish, phone camera style, no text, no branding, 9:16 vertical",
@@ -95,6 +100,7 @@
         },
         {
             "clip_id": 6,
+            "duration": 3,
             "timing": "16-18s — kokeile itekin",
             "start_image_prompt": "Wide shot of a woman sitting in a cozy armchair in a Nordic home interior, warm knit blanket visible, soft afternoon window light, she is reaching for her gray-silver eyeglasses, comfortable lifestyle moment, phone camera style, no text, no branding, 9:16 vertical",
             "end_image_prompt": "The same woman now wearing gray-silver modern eyeglasses comfortably reading a book in the cozy armchair, relaxed happy expression, warm knit blanket, soft Nordic home interior, natural afternoon window light, lifestyle candid photo showing contentment, phone camera style, no text, no branding, 9:16 vertical",
@@ -103,6 +109,7 @@
         },
         {
             "clip_id": 7,
+            "duration": 3,
             "timing": "18-20s — CTA end card",
             "start_image_prompt": "Close-up of one pair of stylish eyeglasses on a clean white marble surface with morning light, minimalist composition, phone camera style, no text, no writing, no branding, 9:16 vertical",
             "end_image_prompt": "Beautiful overhead flat-lay of three pairs of stylish eyeglasses arranged aesthetically on a clean white marble surface with a small green plant and coffee cup, morning light, aspirational lifestyle composition, all three pairs clearly visible, phone camera style, no text, no writing, no branding, 9:16 vertical",

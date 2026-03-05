@@ -212,38 +212,38 @@ class ImageGenerator:
         return start_path, end_path
 
     def generate_batch(self, scenes: list, output_dir: str,
-                       scene_key: str = "scenes") -> list:
+                       scene_key: str = "scenes", max_concurrent: int = 10) -> list:
         """
-        Generate images for all scenes in a script.
+        Generate images for all scenes in parallel.
         Supports both single-frame and dual-frame formats.
 
         Returns list of (scene_id, start_path, end_path) tuples.
         end_path is None for single-frame scenes.
         """
-        results = []
-        total = len(scenes)
+        from concurrent.futures import ThreadPoolExecutor, as_completed
 
+        total = len(scenes)
         has_dual = any(s.get("start_image_prompt") for s in scenes)
         has_refs = any(s.get("reference_image") for s in scenes)
 
-        mode = "dual-frame (O3)" if has_dual else "single-frame (legacy)"
+        mode = "dual-frame (O3)" if has_dual else "single-frame"
         ref_mode = " + product references" if has_refs else ""
-        print(f"\n🖼️  Generating {total} {'frame pairs' if has_dual else 'images'}...")
+        print(f"\n🖼️  Generating {total} {'frame pairs' if has_dual else 'images'} in parallel...")
         print(f"   Model: {self.fal_model}")
         print(f"   Mode:  {mode}{ref_mode}")
-        print(f"   Resolution: {self.image_size}\n")
+        print(f"   Resolution: {self.image_size}")
+        print(f"   Concurrency: {min(max_concurrent, total)}\n")
 
-        for i, scene in enumerate(scenes):
-            scene_id = scene.get("scene_id") or scene.get("clip_id", i + 1)
-
+        def _generate_single(scene, index):
+            """Generate image for a single scene (runs in thread)."""
+            scene_id = scene.get("scene_id") or scene.get("clip_id", index + 1)
             start_prompt = scene.get("start_image_prompt") or scene.get("image_prompt", "")
             end_prompt = scene.get("end_image_prompt")
             reference_image_str = scene.get("reference_image")
 
             if not start_prompt:
                 print(f"  ⏭️  Scene {scene_id}: No image prompt, skipping")
-                results.append((scene_id, None, None))
-                continue
+                return (scene_id, None, None)
 
             try:
                 if end_prompt:
@@ -255,9 +255,9 @@ class ImageGenerator:
                         scene_id=scene_id,
                         reference_image_str=reference_image_str,
                     )
-                    results.append((scene_id, start_path, end_path))
+                    return (scene_id, start_path, end_path)
                 else:
-                    # Single-frame mode
+                    # Single-frame mode — upload refs then generate
                     ref_urls = self._load_reference_urls(reference_image_str)
                     image_path = self.generate(
                         prompt=start_prompt,
@@ -265,17 +265,38 @@ class ImageGenerator:
                         scene_id=scene_id,
                         reference_urls=ref_urls if ref_urls else None,
                     )
-                    results.append((scene_id, image_path, None))
-
-                # Rate limiting
-                if i < total - 1:
-                    time.sleep(2)
+                    return (scene_id, image_path, None)
 
             except Exception as e:
                 print(f"  ❌ Scene {scene_id} failed: {e}")
-                results.append((scene_id, None, None))
+                return (scene_id, None, None)
 
+        # Submit all scenes in parallel
+        results_map = {}
+        with ThreadPoolExecutor(max_workers=min(max_concurrent, total)) as executor:
+            future_to_scene = {}
+            for i, scene in enumerate(scenes):
+                future = executor.submit(_generate_single, scene, i)
+                future_to_scene[future] = i
+
+            # Collect results as they complete
+            for future in as_completed(future_to_scene):
+                idx = future_to_scene[future]
+                try:
+                    result = future.result()
+                    results_map[idx] = result
+                    scene_id = result[0]
+                    status = "✅" if result[1] else "❌"
+                    print(f"  {status} Scene {scene_id} complete ({len(results_map)}/{total})")
+                except Exception as e:
+                    scene_id = scenes[idx].get("scene_id") or scenes[idx].get("clip_id", idx + 1)
+                    print(f"  ❌ Scene {scene_id} exception: {e}")
+                    results_map[idx] = (scene_id, None, None)
+
+        # Return results in original order
+        results = [results_map[i] for i in range(total)]
         successful = sum(1 for _, sp, _ in results if sp is not None)
         print(f"\n📊 Image generation complete: {successful}/{total} successful")
 
         return results
+

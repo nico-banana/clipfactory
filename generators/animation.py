@@ -70,12 +70,53 @@ class AnimationEngine:
         # fal_client uses FAL_KEY env var automatically
 
     def _upload_image(self, image_path: str) -> str:
-        """Upload a local image to fal.ai and return the URL."""
+        """Upload a local image to fal.ai, compressing if over 9MB."""
         if not HAS_FAL:
             raise RuntimeError("fal-client library not available")
 
-        print(f"     📤 Uploading image: {os.path.basename(image_path)}")
-        url = fal_client.upload_file(image_path)
+        file_size = os.path.getsize(image_path)
+        max_size = 9 * 1024 * 1024  # 9MB (leave margin for 10MB API limit)
+
+        upload_path = image_path
+
+        if file_size > max_size:
+            print(f"     📦 Compressing {os.path.basename(image_path)} ({file_size / 1024 / 1024:.1f}MB > 9MB limit)...")
+            try:
+                from PIL import Image as PILImage
+                import io
+
+                img = PILImage.open(image_path)
+                if img.mode == "RGBA":
+                    img = img.convert("RGB")
+
+                # Try progressively lower quality until under limit
+                for quality in [85, 75, 65, 50, 40]:
+                    buf = io.BytesIO()
+                    img.save(buf, format="JPEG", quality=quality, optimize=True)
+                    compressed_size = buf.tell()
+                    if compressed_size <= max_size:
+                        # Save compressed version
+                        compressed_path = image_path.rsplit(".", 1)[0] + "_compressed.jpg"
+                        with open(compressed_path, "wb") as f:
+                            f.write(buf.getvalue())
+                        print(f"     ✅ Compressed to {compressed_size / 1024 / 1024:.1f}MB (quality={quality})")
+                        upload_path = compressed_path
+                        break
+                else:
+                    # If still too large, resize
+                    img.thumbnail((2048, 2048), PILImage.LANCZOS)
+                    buf = io.BytesIO()
+                    img.save(buf, format="JPEG", quality=80, optimize=True)
+                    compressed_path = image_path.rsplit(".", 1)[0] + "_compressed.jpg"
+                    with open(compressed_path, "wb") as f:
+                        f.write(buf.getvalue())
+                    print(f"     ✅ Resized & compressed to {buf.tell() / 1024 / 1024:.1f}MB")
+                    upload_path = compressed_path
+            except ImportError:
+                print("     ⚠️  Pillow not installed, uploading original (may fail)")
+
+        print(f"     📤 Uploading image: {os.path.basename(upload_path)}")
+        url = fal_client.upload_file(upload_path)
         return url
 
     def animate(self, image_path: str, animation_prompt: str,

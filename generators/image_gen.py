@@ -35,8 +35,9 @@ class ImageGenerator:
 
         # Map model name to fal.ai endpoint
         model_map = {
-            "nano-banana-pro-preview": "fal-ai/nano-banana-pro-preview",
+            "nano-banana-pro-preview": "fal-ai/nano-banana-pro",
             "nano-banana-pro": "fal-ai/nano-banana-pro",
+            "nano-banana-2": "fal-ai/nano-banana-2",
             "recraft-v3": "fal-ai/recraft/v3/text-to-image",
             "flux-pro-ultra": "fal-ai/flux-pro/v1.1-ultra",
         }

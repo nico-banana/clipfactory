@@ -17,9 +17,10 @@ voiceover:
 
 animation:
   provider: "fal"
-  model: "fal-ai/kling-video/v2.5/standard/image-to-video"
+  model: "fal-ai/kling-video/o3/standard/image-to-video"
   duration: 5
   aspect_ratio: "9:16"
+  generate_audio: false
 
 heygen:
   provider: "heygen"

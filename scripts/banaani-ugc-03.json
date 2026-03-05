@@ -8,7 +8,7 @@
     "structure": {
         "main": "talking_head",
         "overlay": "greenscreen_talking_head_on_broll",
-        "note": "Short punchy customer testimonial. Talking head as main, B-roll cuts match each sentence. Every B-roll shows the actual Banaani product from reference images."
+        "note": "Short punchy customer testimonial. Talking head as main, B-roll cuts match each sentence. Every B-roll shows the actual Banaani product from reference images. Uses Kling O3 dual-frame for smooth transitions."
     },
     "avatar_prompt": "Photorealistic portrait of a Finnish/Nordic woman, age 50, natural light blonde shoulder-length hair typical Scandinavian style, wearing a soft cream-white knit sweater. Warm genuine smile showing slight surprise, kind light blue Nordic eyes, fair skin with natural freckles. Soft natural daylight from a kitchen window in a cozy Finnish home. Shallow depth of field, creamy warm bokeh. Shot on professional camera, detailed skin texture, minimal natural makeup. Upper body framing, looking directly at camera. 9:16 vertical portrait orientation. High-end lifestyle photography.",
     "talking_head": {
@@ -56,50 +56,57 @@
         {
             "clip_id": 1,
             "timing": "0-3s — optikolla yli 500€",
-            "image_prompt": "Expensive premium eyeglasses sitting on a polished optician counter in a bright clinical optician store, glass display cases in background, sterile white lighting, luxurious but cold atmosphere, shallow depth of field, phone camera style, no text, no writing, no branding, 9:16 vertical",
-            "motion_prompt": "Slow subtle camera zoom towards glasses on counter, gentle ambient light reflection on glass surfaces",
+            "start_image_prompt": "Expensive premium eyeglasses sitting on a polished optician counter in a bright clinical optician store, glass display cases in background, sterile white lighting, luxurious but cold atmosphere, shallow depth of field, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "end_image_prompt": "Close-up of the same expensive glasses on the optician counter, a small price tag showing a high number visible next to them, sterile clinical lighting, cold atmosphere emphasizing expense, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "motion_prompt": "Slow camera zoom in towards the expensive glasses, light reflecting off the clinical glass surfaces, cold sterile atmosphere",
             "reference_image": null
         },
         {
             "clip_id": 2,
             "timing": "3-6s — löysin Banaanin",
-            "image_prompt": "Woman's hands casually holding a small plain cardboard shipping box on a kitchen table, warm sunlight coming from window, cozy Nordic home interior, wooden table surface, casual unboxing moment just arrived, phone camera style, no text, no writing, no logos, no branding, 9:16 vertical",
-            "motion_prompt": "Gentle hands opening the shipping box lid, natural warm light, slow deliberate unboxing motion",
+            "start_image_prompt": "Woman's hands reaching for a small plain cardboard shipping box sitting on a wooden kitchen table, warm sunlight from window, cozy Nordic home interior, the box is still closed, casual anticipation moment, phone camera style, no text, no writing, no logos, no branding, 9:16 vertical",
+            "end_image_prompt": "Woman's hands holding open the same small cardboard shipping box revealing a glasses case inside, warm sunlight from window, cozy Nordic home interior, wooden table surface, joyful unboxing discovery moment, phone camera style, no text, no writing, no logos, no branding, 9:16 vertical",
+            "motion_prompt": "Hands naturally reaching for and beginning to open the shipping box, warm light, gentle anticipation building to reveal",
             "reference_image": null
         },
         {
             "clip_id": 3,
             "timing": "6-9s — kahdet lasit 99€",
-            "image_prompt": "Two pairs of elegant eyeglasses laid on a soft white linen cloth next to each other, one transparent-gold frame and one black-silver frame, natural morning window light, clean minimalist flat-lay composition, warm tones, phone camera style, no text, no writing, no branding, 9:16 vertical",
-            "motion_prompt": "Slow gentle camera pan from one pair to the other, soft light playing across the lenses, natural movement",
+            "start_image_prompt": "One pair of elegant transparent-gold eyeglasses laid on a soft white linen cloth, natural morning window light, clean minimalist composition, warm tones, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "end_image_prompt": "Two pairs of elegant eyeglasses laid side by side on a soft white linen cloth, one transparent-gold frame and one black-silver frame, natural morning window light, clean minimalist flat-lay composition, warm tones, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "motion_prompt": "Smooth camera movement revealing the second pair of glasses next to the first, natural light playing across both lenses, satisfying reveal",
             "reference_image": "assets/banaani/products/corvus-transparent-gold_1.jpg + assets/banaani/products/corvus-black-silver_1.jpg"
         },
         {
             "clip_id": 4,
             "timing": "9-13s — tuntuvat paremmilta",
-            "image_prompt": "Close-up of a woman's face putting on stylish brown-gunmetal modern eyeglasses, natural satisfied expression, warm natural daylight on face, Nordic fair skin, casual candid moment, phone camera style, shallow depth of field, no text, no branding, 9:16 vertical",
-            "motion_prompt": "Woman gently settling glasses on face, natural subtle head tilt, satisfied expression forming",
+            "start_image_prompt": "A woman holding stylish brown-gunmetal modern eyeglasses up in front of her, about to put them on, natural daylight on her face, Nordic fair skin, casual anticipation moment, phone camera style, shallow depth of field, no text, no branding, 9:16 vertical",
+            "end_image_prompt": "Close-up of the same woman now wearing the stylish brown-gunmetal modern eyeglasses, natural satisfied expression with a gentle smile, warm natural daylight on face, Nordic fair skin, confident candid moment, phone camera style, shallow depth of field, no text, no branding, 9:16 vertical",
+            "motion_prompt": "Woman smoothly putting on the glasses and settling them on her face, natural subtle head tilt, satisfied expression forming as she sees clearly",
             "reference_image": "assets/banaani/products/corvus-brown-gunmetal_1.jpg"
         },
         {
             "clip_id": 5,
             "timing": "13-16s — hinta-laatusuhde loistava",
-            "image_prompt": "Elegant close-up of demi-gold eyeglasses being held in one hand with light catching the frame details, showing craftsmanship and quality finish, warm natural light from side, beautiful bokeh background, intimate product detail shot, phone camera style, no text, no branding, 9:16 vertical",
-            "motion_prompt": "Slow gentle rotation showing frame details, light catching metal elements, subtle quality showcase movement",
+            "start_image_prompt": "Elegant wide shot of demi-gold eyeglasses resting on a clean surface, warm natural side light, beautiful bokeh background, product showcase shot, phone camera style, no text, no branding, 9:16 vertical",
+            "end_image_prompt": "Extreme close-up of the same demi-gold eyeglasses being held in one hand with light catching the frame details and hinge craftsmanship, warm natural light from side, intimate quality detail shot showing premium finish, phone camera style, no text, no branding, 9:16 vertical",
+            "motion_prompt": "Camera smoothly moves from wide product view to intimate close-up, light catching metal elements, revealing premium craftsmanship details",
             "reference_image": "assets/banaani/products/corvus-demi-gold_1.jpg"
         },
         {
             "clip_id": 6,
             "timing": "16-18s — kokeile itekin",
-            "image_prompt": "Gray-silver modern eyeglasses worn by a woman reading a book in a cozy armchair, warm knit blanket visible, soft Nordic home interior, natural afternoon window light, lifestyle candid photo, warm comfortable atmosphere, phone camera style, no text, no branding, 9:16 vertical",
-            "motion_prompt": "Subtle camera zoom towards the woman's relaxed face wearing glasses, warm cozy ambient mood",
+            "start_image_prompt": "Wide shot of a woman sitting in a cozy armchair in a Nordic home interior, warm knit blanket visible, soft afternoon window light, she is reaching for her gray-silver eyeglasses, comfortable lifestyle moment, phone camera style, no text, no branding, 9:16 vertical",
+            "end_image_prompt": "The same woman now wearing gray-silver modern eyeglasses comfortably reading a book in the cozy armchair, relaxed happy expression, warm knit blanket, soft Nordic home interior, natural afternoon window light, lifestyle candid photo showing contentment, phone camera style, no text, no branding, 9:16 vertical",
+            "motion_prompt": "Smooth transition from reaching for glasses to wearing them while reading, warm cozy ambient mood, natural contentment",
             "reference_image": "assets/banaani/products/corvus-gray-silver_1.jpg"
         },
         {
             "clip_id": 7,
             "timing": "18-20s — CTA end card",
-            "image_prompt": "Beautiful overhead flat-lay of three pairs of stylish eyeglasses arranged aesthetically on a clean white marble surface with a small green plant and coffee cup, morning light, aspirational lifestyle composition, clean minimalist, phone camera style, no text, no writing, no branding, 9:16 vertical",
-            "motion_prompt": "Slow gentle camera zoom out revealing all three pairs, soft natural light, clean satisfying ending",
+            "start_image_prompt": "Close-up of one pair of stylish eyeglasses on a clean white marble surface with morning light, minimalist composition, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "end_image_prompt": "Beautiful overhead flat-lay of three pairs of stylish eyeglasses arranged aesthetically on a clean white marble surface with a small green plant and coffee cup, morning light, aspirational lifestyle composition, all three pairs clearly visible, phone camera style, no text, no writing, no branding, 9:16 vertical",
+            "motion_prompt": "Camera pulls back smoothly from one pair to reveal all three pairs arranged beautifully, soft natural light, clean satisfying ending composition",
             "reference_image": "assets/banaani/products/corvus-transparent-gold_1.jpg + assets/banaani/products/corvus-demi-gold_1.jpg + assets/banaani/products/perseus-olive-silver_1.jpg"
         }
     ]

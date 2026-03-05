@@ -4,6 +4,7 @@ ClipFactory — Automated Ad Clip Generation Pipeline
 ====================================================
 
 Generate images from scripts and animate them into ad clips at scale.
+Supports Kling O3 dual-frame animation for smooth transitions.
 
 Usage:
     python clipfactory.py scripts/banaani-ugc-01.json
@@ -41,6 +42,26 @@ def load_script(script_path: str) -> dict:
         return json.load(f)
 
 
+def get_scenes(script: dict, scene_filter: int = None) -> list:
+    """
+    Extract scenes from script, supporting both formats:
+    - Legacy: script["scenes"] with image_prompt
+    - New: script["broll_clips"] with start_image_prompt / end_image_prompt
+    """
+    # Prefer broll_clips (new format), fall back to scenes (legacy)
+    scenes = script.get("broll_clips") or script.get("scenes", [])
+
+    if scene_filter is not None:
+        filter_key = "clip_id" if "broll_clips" in script else "scene_id"
+        scenes = [s for s in scenes if s.get(filter_key) == scene_filter
+                  or s.get("scene_id") == scene_filter
+                  or s.get("clip_id") == scene_filter]
+        if not scenes:
+            print(f"❌ Scene/clip {scene_filter} not found in script")
+
+    return scenes
+
+
 def run_pipeline(script_path: str, config_path: str = None,
                  images_only: bool = False, animate_only: bool = False,
                  scene_filter: int = None, skip_assembly: bool = False):
@@ -61,14 +82,14 @@ def run_pipeline(script_path: str, config_path: str = None,
 
     project_name = script.get("project", "untitled")
     client = script.get("client", "unknown")
-    scenes = script.get("scenes", [])
+    scenes = get_scenes(script, scene_filter)
 
-    # Filter to specific scene if requested
-    if scene_filter is not None:
-        scenes = [s for s in scenes if s.get("scene_id") == scene_filter]
-        if not scenes:
-            print(f"❌ Scene {scene_filter} not found in script")
-            return
+    if not scenes:
+        return
+
+    # Detect format
+    has_broll = "broll_clips" in script
+    has_dual_frame = any(s.get("start_image_prompt") for s in scenes)
 
     # Set up output directory
     output_base = config.get("output", {}).get("base_dir", "output")
@@ -91,12 +112,13 @@ def run_pipeline(script_path: str, config_path: str = None,
     print(f"   Project:  {project_name}")
     print(f"   Client:   {client}")
     print(f"   Scenes:   {len(scenes)}")
+    print(f"   Format:   {'Dual-frame (O3)' if has_dual_frame else 'Single-frame (legacy)'}")
     print(f"   Output:   {output_dir}")
     print(f"   Mode:     {'Images only' if images_only else 'Animate only' if animate_only else 'Full pipeline'}")
     print(f"=" * 60)
 
     start_time = time.time()
-    image_results = []
+    image_results = []  # List of (scene_id, start_path, end_path)
     clip_results = []
 
     # ─── STEP 1: Generate Images ───
@@ -128,19 +150,45 @@ def run_pipeline(script_path: str, config_path: str = None,
                     print(f"  📂 Using existing images from: {images_dir}")
 
         if os.path.exists(images_dir):
-            for f in sorted(os.listdir(images_dir)):
-                if f.startswith("scene_") and not f.endswith(".txt"):
-                    scene_id = int(f.split("_")[1].split(".")[0])
-                    image_results.append((scene_id, os.path.join(images_dir, f)))
-            print(f"  📂 Found {len(image_results)} existing images")
+            # Discover images — support both single and dual-frame naming
+            files = sorted(os.listdir(images_dir))
+            discovered = {}
+
+            for f in files:
+                if not f.startswith("scene_") or f.endswith(".txt"):
+                    continue
+
+                name = f.rsplit(".", 1)[0]  # Remove extension
+                if "_start" in name:
+                    scene_id = int(name.split("_")[1])
+                    discovered.setdefault(scene_id, [None, None])
+                    discovered[scene_id][0] = os.path.join(images_dir, f)
+                elif "_end" in name:
+                    scene_id = int(name.split("_")[1])
+                    discovered.setdefault(scene_id, [None, None])
+                    discovered[scene_id][1] = os.path.join(images_dir, f)
+                else:
+                    # Legacy single-frame naming
+                    scene_id = int(name.split("_")[1])
+                    discovered.setdefault(scene_id, [None, None])
+                    discovered[scene_id][0] = os.path.join(images_dir, f)
+
+            for sid in sorted(discovered.keys()):
+                start, end = discovered[sid]
+                image_results.append((sid, start, end))
+
+            dual = sum(1 for _, _, e in image_results if e)
+            print(f"  📂 Found {len(image_results)} scenes ({dual} dual-frame, {len(image_results)-dual} single-frame)")
         else:
             print(f"  ❌ No images found. Run without --animate-only first.")
             return
 
     if images_only:
         elapsed = time.time() - start_time
+        successful = sum(1 for _, sp, _ in image_results if sp)
         print(f"\n{'=' * 60}")
         print(f"✅ Images generated in {elapsed:.1f}s")
+        print(f"   {successful}/{len(scenes)} scenes successful")
         print(f"   Output: {output_dir}/images/")
         print(f"{'=' * 60}")
         return
@@ -166,7 +214,7 @@ def run_pipeline(script_path: str, config_path: str = None,
 
     # Apply text overlays where specified
     for scene in scenes:
-        scene_id = scene.get("scene_id")
+        scene_id = scene.get("scene_id") or scene.get("clip_id")
         text = scene.get("text_overlay")
 
         if not text:
@@ -203,7 +251,7 @@ def run_pipeline(script_path: str, config_path: str = None,
 
     # ─── Summary ───
     elapsed = time.time() - start_time
-    successful_images = sum(1 for _, p in image_results if p)
+    successful_images = sum(1 for _, sp, _ in image_results if sp)
     successful_clips = sum(1 for _, p in clip_results if p)
 
     print(f"\n{'=' * 60}")

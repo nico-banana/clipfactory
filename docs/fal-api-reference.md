@@ -91,18 +91,51 @@ url = fal_client.upload_file("path/to/local/image.png")
 
 ## Video Generation Models
 
-### Kling (via fal.ai)
+### Kling 3.0 — O3 (Omni) — Dual-Frame ⭐ Default
+
+Kling O3 supports **start + end frame** interpolation for smooth cinematic transitions.
 
 | Model | Endpoint | Cost/sec |
 |-------|----------|:--------:|
+| **Kling O3 Standard** | `fal-ai/kling-video/o3/standard/image-to-video` | $0.168 (no audio) / $0.224 (audio) |
+| Kling O3 Pro | `fal-ai/kling-video/o3/pro/image-to-video` | ~$0.30+ |
+| Kling V3 Pro | `fal-ai/kling-video/v3/pro/image-to-video` | ~$0.30+ |
+
+**API Parameters:**
+- `image_url` (required) — Start frame image URL
+- `end_image_url` (optional) — End frame image URL
+- `prompt` — Motion/style text guidance
+- `duration` — 3 to 15 seconds (default: 5)
+- `generate_audio` — Native audio generation (boolean)
+- `multi_prompt` — Multi-shot storyboarding (advanced)
+
+```python
+# Dual-frame animation (O3)
+result = fal_client.subscribe(
+    "fal-ai/kling-video/o3/standard/image-to-video",
+    arguments={
+        "image_url": "https://...start-frame.png",
+        "end_image_url": "https://...end-frame.png",
+        "prompt": "Smooth camera zoom revealing product details",
+        "duration": "5",
+        "generate_audio": False
+    }
+)
+video_url = result["video"]["url"]
+```
+
+### Kling 2.x (via fal.ai)
+
+| Model | Endpoint | Cost/sec |
+|-------|----------|:--------:|
+| Kling 2.5 Turbo Pro | `fal-ai/kling-video/v2.5-turbo/pro/image-to-video` | ~$0.14 |
 | Kling 2.5 Standard | `fal-ai/kling-video/v2.5/standard/image-to-video` | ~$0.07 |
-| Kling 2.5 Pro | `fal-ai/kling-video/v2.5/pro/image-to-video` | ~$0.14 |
+| Kling 2.1 Pro | `fal-ai/kling-video/v2.1/pro/image-to-video` | ~$0.14 |
 | Kling 2.1 Standard | `fal-ai/kling-video/v2.1/standard/image-to-video` | ~$0.07 |
-| Kling Text-to-Video | `fal-ai/kling-video/v2.1/standard/text-to-video` | ~$0.07 |
 
 ```python
 result = fal_client.subscribe(
-    "fal-ai/kling-video/v2.5/standard/image-to-video",
+    "fal-ai/kling-video/v2.5-turbo/pro/image-to-video",
     arguments={
         "image_url": "https://...",
         "prompt": "Natural subtle movement, person smiling",
@@ -233,10 +266,13 @@ fal.ai uses **pure pay-per-use** pricing:
 ### Cost Examples for ClipFactory
 | Action | Model | ~Cost |
 |--------|-------|:-----:|
-| Generate 1 product image | FLUX schnell | $0.003 |
-| Animate 5s clip | Kling 2.5 Standard | $0.35 |
+| Generate 1 product image | Nano Banana 2 (Gemini) | ~$0.07 |
+| Generate 1 frame pair (start+end) | Nano Banana 2 (Gemini) | ~$0.14 |
+| Animate 5s clip (dual-frame) | Kling O3 Standard | ~$0.84 |
+| Animate 5s clip (single-frame) | Kling 2.5 Standard | ~$0.35 |
 | Generate voiceover | ElevenLabs TTS | $0.01–0.03 |
-| Full 6-scene ad | Mixed | ~$2.50 |
+| Full 7-scene ad (O3 dual-frame) | Mixed | ~$7.00 |
+| Full 7-scene ad (legacy single) | Mixed | ~$3.00 |
 
 ---
 
